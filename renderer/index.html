@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'">
+  <title>六芒星记账</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- 顶栏:三屏切换 -->
+  <div class="topbar">
+    <h1>六芒星记账</h1>
+    <button class="tab-btn active" id="tab-add" data-page="page-add">记账</button>
+    <button class="tab-btn" id="tab-list" data-page="page-list">明细</button>
+    <button class="tab-btn" id="tab-stats" data-page="page-stats">统计</button>
+  </div>
+
+  <!-- 记账页 -->
+  <div class="page active" id="page-add">
+    <div class="add-card">
+      <h2>记一笔</h2>
+      <div class="type-seg" id="add-type-seg">
+        <button type="button" class="seg-btn active" data-type="expense">支出</button>
+        <button type="button" class="seg-btn" data-type="income">收入</button>
+      </div>
+      <div class="form-grid" id="add-form">
+        <div class="field">
+          <label for="add-amount">金额(元)</label>
+          <input type="text" id="add-amount" placeholder="比如 12.34" inputmode="decimal">
+        </div>
+        <div class="field">
+          <label for="add-date">日期</label>
+          <input type="date" id="add-date">
+        </div>
+        <div class="field">
+          <label for="add-category">分类</label>
+          <select id="add-category"></select>
+        </div>
+        <div class="field">
+          <label for="add-subcategory">明细分类</label>
+          <select id="add-subcategory"></select>
+        </div>
+        <div class="field" style="grid-column: 1 / -1;">
+          <label for="add-note">备注(可不填)</label>
+          <input type="text" id="add-note" placeholder="比如:和朋友聚餐" maxlength="50">
+        </div>
+      </div>
+      <button class="btn-primary" id="btn-save">记一笔</button>
+      <p class="hint">金额最多两位小数,比如 12.34。按回车也可以快速保存。</p>
+    </div>
+  </div>
+
+  <!-- 明细页 -->
+  <div class="page" id="page-list">
+    <div class="list-header">
+      <h2>账目明细</h2>
+      <select id="filter-type">
+        <option value="">全部收支</option>
+        <option value="expense">支出</option>
+        <option value="income">收入</option>
+      </select>
+      <select id="filter-category">
+        <option value="">全部分类</option>
+      </select>
+    </div>
+    <div id="list-body"></div>
+  </div>
+
+  <!-- 统计页 -->
+  <div class="page" id="page-stats">
+    <div class="stats-header">
+      <h2 id="stats-title"></h2>
+      <div class="stats-switch">
+        <button id="view-month" class="active">按月</button>
+        <button id="view-year">按年</button>
+      </div>
+      <button class="nav-btn" id="btn-prev">‹ 上月</button>
+      <button class="nav-btn" id="btn-next">下月 ›</button>
+    </div>
+
+    <div class="cards">
+      <div class="stat-card">
+        <div class="label">支出</div>
+        <div class="value" id="stat-expense">¥0.00</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">收入</div>
+        <div class="value income" id="stat-income">¥0.00</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">结余</div>
+        <div class="value" id="stat-balance">+¥0.00</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">记账笔数</div>
+        <div class="value" id="stat-count">0 笔</div>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <h3>支出分类占比(环形图)</h3>
+      <div class="chart-wrap"><canvas id="pie-chart"></canvas></div>
+    </div>
+
+    <div class="chart-card">
+      <h3>收支趋势(折线图)</h3>
+      <div class="chart-wrap"><canvas id="line-chart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- 编辑弹层 -->
+  <div class="modal-mask" id="edit-modal">
+    <div class="modal">
+      <h3>修改这笔账</h3>
+      <div class="type-seg" id="edit-type-seg">
+        <button type="button" class="seg-btn active" data-type="expense">支出</button>
+        <button type="button" class="seg-btn" data-type="income">收入</button>
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label>金额(元)</label>
+          <input type="text" id="edit-amount">
+        </div>
+        <div class="field">
+          <label>日期</label>
+          <input type="date" id="edit-date">
+        </div>
+        <div class="field">
+          <label>分类</label>
+          <select id="edit-category"></select>
+        </div>
+        <div class="field">
+          <label>明细分类</label>
+          <select id="edit-subcategory"></select>
+        </div>
+        <div class="field" style="grid-column: 1 / -1;">
+          <label>备注</label>
+          <input type="text" id="edit-note" maxlength="50">
+        </div>
+      </div>
+      <input type="hidden" id="edit-id">
+      <div class="btn-row">
+        <button class="btn-secondary" id="edit-cancel">取消</button>
+        <button class="btn-primary" id="edit-save">保存修改</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 提示条 -->
+  <div id="toast"></div>
+
+  <!-- Chart.js 本地离线副本 -->
+  <script src="js/vendor/chart.umd.min.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/entry.js"></script>
+  <script src="js/list.js"></script>
+  <script src="js/stats.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

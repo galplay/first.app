@@ -1,0 +1,18 @@
+# 依赖包(从网上下载的软件库,几万个文件,不需要存档;重新 npm install 即可)
+node_modules/
+
+# 用户数据:记账数据库。账本是用户私人财产,独立放在系统目录
+# (C:\Users\<用户名>\AppData\Roaming\hexagram-ledger\ledger.db),不进代码历史
+ledger.db
+*.db
+*.db.bak
+*.db-wal
+*.db-shm
+
+# Electron 打包输出
+release/
+dist/
+
+# 系统临时文件
+.DS_Store
+Thumbs.db

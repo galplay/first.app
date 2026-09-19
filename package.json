@@ -1,0 +1,20 @@
+{
+  "name": "hexagram-ledger",
+  "version": "0.3.0",
+  "description": "六芒星记账 - 个人记账桌面应用",
+  "main": "main/main.js",
+  "author": "六芒星记账",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder"
+  },
+  "dependencies": {
+    "better-sqlite3": "^13.0.3",
+    "chart.js": "^4.5.1"
+  },
+  "devDependencies": {
+    "electron": "^44.4.1",
+    "electron-builder": "^26.15.3"
+  }
+}

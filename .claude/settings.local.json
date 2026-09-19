@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node -e ' *)",
+      "Bash(npm config *)",
+      "Bash(curl -sI --max-time 20 \"https://npmmirror.com/mirrors/electron/44.4.1/electron-v44.4.1-win32-x64.zip\")",
+      "Bash(echo \"curl exit: $?\")",
+      "Bash(curl -sL --max-time 120 -o /tmp/electron.zip \"https://npmmirror.com/mirrors/electron/44.4.1/electron-v44.4.1-win32-x64.zip\")",
+      "Read(//tmp/**)",
+      "Bash(node node_modules/electron/path.txt)",
+      "Bash(node -e \"require\\('electron'\\)\")",
+      "Bash(echo \"exit: $?\")",
+      "Bash(env -u ELECTRON_RUN_AS_NODE ELECTRON_DISABLE_SECURITY_WARNINGS=1 node_modules/electron/dist/electron.exe .)",
+      "Bash(echo \"launched, pid=$!\")",
+      "Bash(tasklist)",
+      "Bash(powershell -Command '[Environment]::GetEnvironmentVariable\\(\"ELECTRON_RUN_AS_NODE\",\"Process\"\\)')",
+      "Bash(env)",
+      "Bash(powershell -Command 'Get-Process | Where-Object {$_.Id -eq $PID} | Select-Object Id, ProcessName, Path; Write-Host \"parent:\"; \\(Get-CimInstance Win32_Process -Filter \"ProcessId=$PID\"\\).ParentProcessId')",
+      "Bash(powershell -Command '$p = Get-CimInstance Win32_Process -Filter \"ProcessId=18096\"; Write-Host \\($p.Name + \" | \" + $p.CommandLine\\); $pp = Get-CimInstance Win32_Process -Filter \\(\"ProcessId=\" + $p.ParentProcessId\\); Write-Host \\($pp.Name + \" | \" + \\($pp.CommandLine -replace \"\\\\s+\", \" \"\\)\\)')",
+      "Bash(powershell -Command 'Get-Process electron -ErrorAction SilentlyContinue | Stop-Process -Force; Start-Sleep 1; \\(Get-Process electron -ErrorAction SilentlyContinue\\).Count')",
+      "Bash(powershell -Command '[Environment]::GetFolderPath\\(\"ApplicationData\"\\)')",
+      "Bash(cd \"e:/my/code/vscode/hexagram-ledger\" && env -u ELECTRON_RUN_AS_NODE ELECTRON_DISABLE_SECURITY_WARNINGS=1 node_modules/electron/dist/electron.exe . > /tmp/app-final.log 2>&1 & *)",
+      "Read(//c/Users/shift6/AppData/Roaming/hexagram-ledger/**)",
+      "Bash(powershell -Command 'Get-Process electron -ErrorAction SilentlyContinue | Stop-Process -Force')"
+    ]
+  }
+}

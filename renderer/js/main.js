@@ -12,6 +12,7 @@
       page.classList.add('active');
       if (btn.dataset.page === 'page-list') initList();
       if (btn.dataset.page === 'page-stats') initStats();
+      if (btn.dataset.page === 'page-backup') initBackup();
     });
   });
 
@@ -25,6 +26,12 @@
     if (window.__statsInited) return;
     window.__statsInited = true;
     window.LedgerApp.statsInit();
+  }
+
+  function initBackup() {
+    if (window.__backupInited) return;
+    window.__backupInited = true;
+    window.LedgerApp.backupInit();
   }
 
   // 启动即初始化记账页

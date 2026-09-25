@@ -1,0 +1,8 @@
+{
+  "appId": "com.hexagram.ledger",
+  "appName": "六芒星记账",
+  "webDir": "renderer",
+  "server": {
+    "androidScheme": "https"
+  }
+}

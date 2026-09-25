@@ -82,6 +82,7 @@
 | 图表库 | Chart.js(本地离线) | 环形图 + 折线图够用,体积小 |
 | 打包 | electron-builder → NSIS 安装包 | 一键安装,桌面快捷方式 |
 | 架构 | 主进程(main/) + 渲染进程(renderer/) + preload 桥接 | Electron 标准安全架构 |
+| 安卓打包 | Capacitor 套壳 | 复用同一套界面文件;手机数据层 renderer/js/mobile-backend.js(基于 @capacitor-community/sqlite),桌面/手机共用共享数据层 renderer/js/shared/ledger-core.js |
 
 - **安全基线**:窗口 `contextIsolation: true`、`nodeIntegration: false`,渲染层只能通过 `window.ledger` 访问数据
 - **单实例锁**:应用只允许开一个窗口,防止双开互相覆盖数据
@@ -137,6 +138,15 @@
 npm install       # 首次安装依赖(装一次即可)
 npm start         # 运行应用(开发调试)
 npm run dist      # 打包生成安装包(生成在 release 文件夹)
+npm run android:sync   # 把界面文件同步进安卓工程(改了界面后执行)
+npm run android:build  # 打包安卓 APK(需要 JAVA_HOME 指向 JDK21,见下)
+```
+
+**打包安卓 APK 的完整流程**(需要 JDK 21,已装在 `D:\my\JDK21\jdk-21.0.12.1+1`):
+```bash
+set JAVA_HOME=D:\my\JDK21\jdk-21.0.12.1+1
+cd android && gradlew.bat assembleDebug
+# 产物:android\app\build\outputs\apk\debug\app-debug.apk
 ```
 
 ## 八、目录结构(给 Claude 看)
@@ -146,6 +156,7 @@ hexagram-ledger/
 ├── package.json          # 项目清单与命令
 ├── .npmrc                # 国内镜像配置
 ├── electron-builder.yml  # 打包配置
+├── capacitor.config.json # 安卓打包配置(Capacitor)
 ├── main/                 # 主进程(唯一能碰数据库的地方)
 │   ├── main.js           # 窗口、生命周期、单实例锁
 │   ├── preload.js        # 桥接层(contextBridge)
@@ -153,15 +164,20 @@ hexagram-ledger/
 │   ├── seed-data.js      # 建表 + 分类种子数据
 │   └── ipc.js            # 主进程接收渲染层请求
 ├── renderer/             # 界面层(HTML/CSS/JS)
-│   ├── index.html        # 单页三屏(记账/明细/统计)
+│   ├── index.html        # 单页四屏(记账/明细/统计/备份)
 │   ├── css/style.css
 │   └── js/
 │       ├── vendor/chart.umd.min.js  # Chart.js 本地副本(离线)
-│       ├── api.js        # 调用后台的封装
+│       ├── api.js        # 调用后台的封装(桌面 preload / 手机 bridge 都走这里)
 │       ├── utils.js      # 金额/日期工具
 │       ├── entry.js      # 记账页逻辑
 │       ├── list.js       # 明细页逻辑
-│       └── stats.js      # 统计页逻辑
+│       ├── stats.js      # 统计页逻辑
+│       ├── backup.js     # 备份页逻辑(导出/导入)
+│       ├── shared/ledger-core.js  # 共享数据层(桌面/手机共用,UMD)
+│       ├── mobile-backend.js      # 手机版桥接层(仅 Capacitor 环境生效)
+│       └── main.js       # 顶栏四屏切换 + 懒加载
+├── android/              # 安卓工程(gradle 自动生成,不用手动改)
 ├── scripts/init-db.js    # 开发期建库脚本
 └── assets/icon.ico       # 应用图标
 ```
@@ -173,3 +189,5 @@ hexagram-ledger/
 | 2026-09-17 | v0.1 规划 | 产品文档定稿、技术栈拍板(Electron + better-sqlite3 + Chart.js) |
 | 2026-09-17 | v0.2 骨架 | 三屏页面骨架(记账/明细/统计)、数据库建库、分类表、IPC 桥接、图表库离线副本 |
 | 2026-09-19 | v0.3 收入功能 | 每笔账增加收支类型(支出/收入),新增收入分类(工资奖金/人情往来/投资理财/退款报销),统计页升级为支出/收入/结余卡片 + 收支双线折线图 |
+| 2026-09-25 | v0.4 数据搬家 | 新增"备份"页:导出/导入账目(电脑弹窗存文件、手机走系统分享),备份文件两端通用;共享数据层拆分出 renderer/js/shared/ledger-core.js(桌面/手机共用) |
+| 2026-09-25 | v0.5 安卓版 | 用 Capacitor 套壳打包安卓 App:手机版桥接层 renderer/js/mobile-backend.js(@capacitor-community/sqlite 手机本地数据库),界面复用同一套文件;安卓工程在 android/(gradle 自动生成),APK 构建命令见 package.json 的 android:* 脚本 |

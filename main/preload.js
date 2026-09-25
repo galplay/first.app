@@ -8,8 +8,11 @@ const { contextBridge, ipcRenderer } = require('electron');
 // 修改:ledger.update(id, {...})  删除:ledger.remove(id)
 // 明细:ledger.list({ category?, month?, type? })
 // 统计:ledger.summaryByCategory({ month?/year?, type? }) / summaryByDay / summaryCard / daysInMonth
+// 搬家:ledger.exportData() -> { canceled, path?, count? } / ledger.importData({ jsonText, mode })
+// 平台:ledger.platform -> 'desktop' | 'mobile'(手机端在 mobile-backend.js 里定义)
 contextBridge.exposeInMainWorld('ledger', {
-  version: '0.3.0',
+  version: '0.4.0',
+  platform: 'desktop',
 
   categories: {
     list: (opts) => ipcRenderer.invoke('categories:list', opts),
@@ -24,4 +27,8 @@ contextBridge.exposeInMainWorld('ledger', {
   summaryByDay: (opts) => ipcRenderer.invoke('records:summaryByDay', opts),
   summaryCard: (opts) => ipcRenderer.invoke('records:summaryCard', opts),
   daysInMonth: (year, month) => ipcRenderer.invoke('stats:daysInMonth', year, month),
+
+  // 数据搬家
+  exportData: () => ipcRenderer.invoke('data:export'),
+  importData: (jsonText, mode) => ipcRenderer.invoke('data:import', { jsonText, mode }),
 });

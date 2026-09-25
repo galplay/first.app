@@ -302,3 +302,83 @@ input, select {
   z-index: 99;
 }
 #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ===== 备份页 ===== */
+.backup-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 28px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.06);
+  max-width: 640px;
+}
+.backup-card h2 { font-size: 20px; margin-bottom: 12px; }
+.backup-desc { color: var(--muted); font-size: 14px; line-height: 1.6; margin-bottom: 24px; }
+.backup-section {
+  border-top: 1px solid var(--border);
+  padding-top: 20px;
+  margin-bottom: 24px;
+}
+.backup-section h3 { font-size: 16px; margin-bottom: 8px; }
+.backup-tip { color: var(--muted); font-size: 13px; line-height: 1.6; margin-bottom: 14px; }
+.backup-section .btn-primary { margin-top: 4px; }
+
+.import-controls {
+  display: flex;
+  gap: 18px;
+  margin-bottom: 14px;
+}
+.radio-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: var(--text);
+  cursor: pointer;
+}
+
+/* 备份页提示文字:默认(电脑版)显示"电脑上弹窗",手机版切换成"手机上分享" */
+.backup-mobile { display: none; }
+body.platform-mobile .backup-desktop { display: none; }
+body.platform-mobile .backup-mobile { display: inline; }
+
+/* ===== 手机屏幕适配(安卓 App / 窄窗口) ===== */
+@media (max-width: 640px) {
+  body { font-size: 15px; }
+
+  .topbar {
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 8px 10px;
+  }
+  .topbar h1 { width: 100%; margin-right: 0; margin-bottom: 2px; }
+  .tab-btn { flex: 1; padding: 9px 6px; font-size: 14px; }
+
+  .page { padding: 12px; }
+
+  .add-card { padding: 18px; }
+  .form-grid { grid-template-columns: 1fr; }
+  .type-seg { width: 100%; }
+  .type-seg .seg-btn { flex: 1; text-align: center; }
+
+  .list-header { flex-wrap: wrap; gap: 8px; }
+  .list-header h2 { width: 100%; }
+  .list-header select { flex: 1; min-width: 0; }
+
+  .record-row { flex-wrap: wrap; gap: 8px; }
+  .record-info { flex: 1 1 60%; min-width: 0; }
+  .record-actions { flex: 1 1 100%; justify-content: flex-end; padding-top: 2px; }
+
+  .stats-header { flex-wrap: wrap; gap: 8px; }
+  .stats-header h2 { flex: 1 1 100%; }
+  .cards { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .stat-card { padding: 14px 10px; }
+  .stat-card .value { font-size: 22px; }
+  .chart-wrap { height: 260px; }
+  .chart-card { padding: 14px; }
+
+  .modal { padding: 18px; width: 94vw; max-width: 94vw; }
+  .modal .form-grid { grid-template-columns: 1fr; }
+
+  .backup-card { padding: 18px; }
+  .import-controls { flex-direction: column; gap: 10px; }
+}

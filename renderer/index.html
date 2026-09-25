@@ -2,7 +2,8 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'">
   <title>六芒星记账</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
@@ -13,6 +14,7 @@
     <button class="tab-btn active" id="tab-add" data-page="page-add">记账</button>
     <button class="tab-btn" id="tab-list" data-page="page-list">明细</button>
     <button class="tab-btn" id="tab-stats" data-page="page-stats">统计</button>
+    <button class="tab-btn" id="tab-backup" data-page="page-backup">备份</button>
   </div>
 
   <!-- 记账页 -->
@@ -108,6 +110,35 @@
     </div>
   </div>
 
+  <!-- 备份页 -->
+  <div class="page" id="page-backup">
+    <div class="backup-card">
+      <h2>数据备份与搬家</h2>
+      <p class="backup-desc">把账目保存成一个文件,可以留着以防万一,也可以在电脑和手机之间互相搬。</p>
+
+      <div class="backup-section">
+        <h3>导出(备份)</h3>
+        <p class="backup-tip">把所有账目打包成一个备份文件。<span class="backup-desktop">电脑上会弹窗让你选择保存位置;</span><span class="backup-mobile">手机上会让你选择分享方式。</span></p>
+        <button class="btn-primary" id="btn-export">导出账目</button>
+      </div>
+
+      <div class="backup-section">
+        <h3>导入(恢复)</h3>
+        <p class="backup-tip">选一个之前导出的备份文件,把里面的账目恢复到本机。可选"覆盖"(清空现有账目后导入)或"合并"(保留现有账目,只追加新纪录)。</p>
+        <div class="import-controls">
+          <label class="radio-label">
+            <input type="radio" name="import-mode" value="overwrite" checked> 覆盖现有账目
+          </label>
+          <label class="radio-label">
+            <input type="radio" name="import-mode" value="merge"> 合并(追加)
+          </label>
+        </div>
+        <input type="file" id="import-file" accept=".json,application/json" style="display:none">
+        <button class="btn-primary" id="btn-import">选择备份文件导入</button>
+      </div>
+    </div>
+  </div>
+
   <!-- 编辑弹层 -->
   <div class="modal-mask" id="edit-modal">
     <div class="modal">
@@ -152,10 +183,15 @@
   <!-- Chart.js 本地离线副本 -->
   <script src="js/vendor/chart.umd.min.js"></script>
   <script src="js/utils.js"></script>
+  <!-- 共享数据层:电脑(main 进程 require)和手机(本 script 标签)共用 -->
+  <script src="js/shared/ledger-core.js"></script>
+  <!-- 手机版桥接层:只在 Capacitor 环境里定义 window.ledger,电脑版自动跳过 -->
+  <script src="js/mobile-backend.js"></script>
   <script src="js/api.js"></script>
   <script src="js/entry.js"></script>
   <script src="js/list.js"></script>
   <script src="js/stats.js"></script>
+  <script src="js/backup.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>

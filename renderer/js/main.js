@@ -36,4 +36,6 @@
 
   // 启动即初始化记账页
   window.LedgerApp.entryInit();
+  // 启动即绑定贪吃蛇按钮
+  window.LedgerApp.snakeInit();
 })();

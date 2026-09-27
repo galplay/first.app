@@ -303,6 +303,64 @@ input, select {
 }
 #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
+/* ===== 贪吃蛇小游戏 ===== */
+.game-btn {
+  margin-left: auto;               /* 顶栏最右边,和四个页面按钮分开 */
+  padding: 7px 16px;
+  border-radius: 999px;            /* 胶囊形状,一眼看出和"页面"不一样 */
+  font-size: 14px;
+  font-weight: 600;
+  background: var(--income);
+  color: #fff;
+  transition: all .15s;
+}
+.game-btn:hover { opacity: .88; }
+
+.game-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, .5);
+  align-items: center;
+  justify-content: center;
+  z-index: 60;
+}
+.game-overlay.show { display: flex; }
+
+.game-panel {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 18px 18px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, .25);
+  max-width: 94vw;
+}
+.game-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.game-header h2 { font-size: 18px; }
+.game-scores { display: flex; gap: 18px; font-size: 13px; color: var(--muted); }
+.game-scores b { color: var(--text); font-size: 18px; }
+
+#game-canvas {
+  width: min(82vmin, 480px);
+  aspect-ratio: 1 / 1;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.game-footer { display: flex; gap: 12px; }
+.game-footer .btn-primary,
+.game-footer .btn-secondary { margin-top: 0; padding: 9px 24px; }
+
 /* ===== 备份页 ===== */
 .backup-card {
   background: var(--card);
@@ -381,4 +439,14 @@ body.platform-mobile .backup-mobile { display: inline; }
 
   .backup-card { padding: 18px; }
   .import-controls { flex-direction: column; gap: 10px; }
+
+  .game-btn { margin-left: 0; padding: 8px 14px; }
+  #game-canvas { width: min(88vmin, 92vw); }
+  .game-panel { padding: 12px 12px 14px; gap: 10px; }
+  .game-header h2 { font-size: 16px; }
+  .game-scores { gap: 10px; }
+  .game-scores b { font-size: 16px; }
+  .game-footer { width: 100%; }
+  .game-footer .btn-primary,
+  .game-footer .btn-secondary { flex: 1; }
 }

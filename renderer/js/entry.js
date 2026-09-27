@@ -114,7 +114,9 @@
       clearForm();
       showToast('记好了 ✔');
     } catch (e) {
-      showToast('保存失败,请重试');
+      // 把真实错误显示出来,方便排查(手机端数据库问题时会看到具体原因)
+      var msg = e && e.message ? e.message : String(e);
+      showToast('保存失败:' + msg);
     } finally {
       btn.disabled = false;
     }
